@@ -59,7 +59,6 @@ namespace Counter
             _counter++;
             await SetTitle(args.Context, _counter.ToString());
 
-
         }
 
         /// <summary>

@@ -106,7 +106,6 @@ namespace StreamDeck.Net
 
                 if (!string.IsNullOrEmpty(jsonString))
                 {
-                    var payloads = new List<StreamDeckEventPayload>();
                     using (var sr = new StringReader(jsonString))
                     using (var jsonReader = new JsonTextReader(sr))
                     {
