@@ -1,0 +1,36 @@
+{
+  "Actions": [
+    {
+      "Icon": "actionIcon",
+      "Name": "Example-Counter",
+      "States": [
+        {
+          "Image": "actionDefaultImage",
+          "TitleAlignment": "middle",
+          "FontSize": "16"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "How many times did you get pwned today? Keep track with this counter.",
+      "UUID": "com.sedders123.example_counter"
+    }
+  ],
+  "Author": "James Seden Smith",
+  "CodePathWin": "Counter.exe",
+  "CodePathMac": "Counter",
+  "Description": "A simple counter action",
+  "Name": "Example_Counter",
+  "Icon": "pluginIcon",
+  "URL": "https://www.elgato.com/gaming/stream-deck",
+  "Version": "1.2",
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ]
+}

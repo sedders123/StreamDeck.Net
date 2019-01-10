@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamDeck.Net", "StreamDeck.Net\StreamDeck.Net.csproj", "{CA37C508-33F1-406F-B695-90307B45C738}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{14382C5E-0FBE-4C9D-8BCC-D7F21F3DDE4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Counter", "examples\Counter\Counter.csproj", "{5F3EA6BD-A0EB-4551-97F5-217D22CAEB87}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA37C508-33F1-406F-B695-90307B45C738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA37C508-33F1-406F-B695-90307B45C738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA37C508-33F1-406F-B695-90307B45C738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA37C508-33F1-406F-B695-90307B45C738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F3EA6BD-A0EB-4551-97F5-217D22CAEB87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F3EA6BD-A0EB-4551-97F5-217D22CAEB87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F3EA6BD-A0EB-4551-97F5-217D22CAEB87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F3EA6BD-A0EB-4551-97F5-217D22CAEB87}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5F3EA6BD-A0EB-4551-97F5-217D22CAEB87} = {14382C5E-0FBE-4C9D-8BCC-D7F21F3DDE4A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C18EE662-FBA5-4161-BCCD-019283B5A7B2}
+	EndGlobalSection
+EndGlobal
