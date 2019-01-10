@@ -9,6 +9,8 @@
     <Description>A .NET Core interface for the StreamDeck SDK</Description>
     <Copyright>James Seden Smith</Copyright>
     <RepositoryUrl>https://github.com/sedders123/StreamDeck.Net</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/sedders123/StreamDeck.Net/blob/master/LICENSE</PackageLicenseUrl>
+    <Version>0.1.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
