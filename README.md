@@ -67,7 +67,9 @@ Simply clone this repositry and Nuget Restore the solution.
 
 ## Install
 
-> dotnet add package StreamDeck.Net
+```
+dotnet add package StreamDeck.Net
+```
 
 For ease of debuugging you can set your plugins local publish profiles to point to the StreamDeck softwares plugin folder. Then you can just re-run the software and attach to process to step through your code.
 
