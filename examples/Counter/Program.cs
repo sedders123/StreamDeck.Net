@@ -21,22 +21,22 @@ namespace Counter
         public string Info { get; set; }
 
         public static Task<int> Main(string[] args) => CommandLineApplication.ExecuteAsync<Program>(args);
-        
+
 
         private async Task OnExecuteAsync()
         {
             var cancellationTokenSource = new CancellationTokenSource();
-            var streamdeck = new StreamDeckClient(Port, PluginUuid, RegisterEvent, Info);
-            streamdeck.KeyDownEventAsync += UpdateCounter;
-            await streamdeck.RunAsync(cancellationTokenSource.Token);
+            var streamDeck = new StreamDeckClient(Port, PluginUuid, RegisterEvent, Info);
+            streamDeck.KeyDownEventAsync += UpdateCounter;
+            await streamDeck.RunAsync(cancellationTokenSource.Token);
         }
 
         private static int _counter;
 
-        private static async Task UpdateCounter(StreamDeckClient e, StreamDeckEventPayload args)
+        private static async Task UpdateCounter(StreamDeckClient client, StreamDeckEventPayload args)
         {
             _counter++;
-            await e.SetTitle(args.Context, _counter.ToString());
+            await client.SetTitle(args.Context, _counter.ToString());
         }
     }
 }
