@@ -24,7 +24,9 @@ namespace StreamDeck.Net
         /// WebSocket used for communication with the Stream Deck
         /// </summary>
         [Obsolete("This will likely be made private in the near future. It is exposed to allow for custom usage while the library is being built.")]
-        public ClientWebSocket Socket { get; }
+        public ClientWebSocket Raw_Socket { get; }
+
+        internal ClientWebSocket Socket { get; }
 
         /// <summary>
         /// Occurs when an Event is received from the Stream Deck.
@@ -93,7 +95,7 @@ namespace StreamDeck.Net
                 Uuid = _pluginUuid
             };
 
-            var outString = JsonConvert.SerializeObject(registration, _serialiserSettings);  
+            var outString = JsonConvert.SerializeObject(registration, _serialiserSettings);
             var outBytes = Encoding.UTF8.GetBytes(outString);
             return outBytes;
 
