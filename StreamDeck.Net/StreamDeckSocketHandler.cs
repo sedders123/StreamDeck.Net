@@ -12,42 +12,77 @@ using StreamDeck.Net.Models;
 
 namespace StreamDeck.Net
 {
-    public delegate Task StreamDeckEventHandler(object source, StreamDeckEventPayload e);
+    public delegate Task StreamDeckSocketEventHandler(StreamDeckSocketHandler source, StreamDeckEventPayload e);
+    public delegate Task StreamDeckEventHandler(StreamDeckClient source, StreamDeckEventPayload e);
 
+    /// <summary>
+    /// Wrapper for managing WebSocket communcation with the Stream Deck.
+    /// </summary>
     public class StreamDeckSocketHandler
     {
-        private readonly Uri _uri;
-        private bool _connected;
-        private readonly string _registerEvent;
-        private readonly string _pluginUuid;
-        private readonly JsonSerializer _serializer;
+        /// <summary>
+        /// WebSocket used for communication with Stream Deck
+        /// </summary>
+        [Obsolete("This will likely be made private. It is exposed to allow for custom usage while the library is being built")]
         public ClientWebSocket Socket { get; }
 
-        public event StreamDeckEventHandler EventOccurredAsync;
-        private Task OnEventOccurredAsync(StreamDeckEventPayload data) => EventOccurredAsync?.Invoke(this, data);
+        /// <summary>
+        /// Occurs when an Event is received from the Stream Deck.
+        /// </summary>
+        public event StreamDeckSocketEventHandler EventOccurredAsync;
 
-
+        /// <summary>
+        /// Wrapper for managing WebSocket communcation with the Stream Deck.
+        /// </summary>
+        /// <param name="uri">The URI to connect to the websocket on.</param>
+        /// <param name="registerEvent">The Registration event payload.</param>
+        /// <param name="pluginUuid">The plugin's UUID.</param>
         public StreamDeckSocketHandler(Uri uri, string registerEvent, string pluginUuid)
         {
             _uri = uri;
             _registerEvent = registerEvent;
             _pluginUuid = pluginUuid;
+#pragma warning disable 618
             Socket = new ClientWebSocket();
-            _serializer = new JsonSerializer{ContractResolver = new CamelCasePropertyNamesContractResolver() };
+#pragma warning restore 618
+            _serialiserSettings = new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()};
+            _serialiser = JsonSerializer.Create(_serialiserSettings);
         }
 
+        /// <summary>
+        /// Initiate connection with the Stream Deck.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token to be used for async requests.</param>
         public async Task ConnectAsync(CancellationToken cancellationToken)
         {
+#pragma warning disable 618
             await Socket.ConnectAsync(_uri, cancellationToken);
             await Socket.SendAsync(GetPluginRegistrationBytes(), WebSocketMessageType.Text, true, CancellationToken.None);
+#pragma warning restore 618
             _connected = true;
         }
 
+        /// <summary>
+        /// Continually listens to the WebSocket and raises EventsOccurrences when messages are recieved.
+        /// </summary>
+        /// <param name="cancellationToken">Canellation token used to halt the function.</param>
         public async Task RunAsync(CancellationToken cancellationToken)
         {
+            if (!_connected)
+            {
+                throw new Exception("Not connected to socket");
+            }
             var pipe = new Pipe();
             Task.WaitAll(FillPipeAsync(pipe.Writer, cancellationToken), ReadPipe(pipe.Reader, cancellationToken));
         }
+
+        private readonly Uri _uri;
+        private bool _connected;
+        private readonly string _registerEvent;
+        private readonly string _pluginUuid;
+        private readonly JsonSerializerSettings _serialiserSettings;
+        private readonly JsonSerializer _serialiser;
+        private Task OnEventOccurredAsync(StreamDeckEventPayload data) => EventOccurredAsync?.Invoke(this, data);
 
         private ArraySegment<byte> GetPluginRegistrationBytes()
         {
@@ -58,18 +93,13 @@ namespace StreamDeck.Net
                 Uuid = _pluginUuid
             };
 
-            byte[] outBytes;
-            using (var textWriter = new StringWriter())
-            {
-                _serializer.Serialize(textWriter, registration);
-                var outString = textWriter.ToString();
-                outBytes = Encoding.UTF8.GetBytes(outString);
-            }
+            var outString = JsonConvert.SerializeObject(registration, _serialiserSettings);  
+            var outBytes = Encoding.UTF8.GetBytes(outString);
             return outBytes;
 
         }
 
-        public async Task FillPipeAsync(PipeWriter writer, CancellationToken cancellationToken)
+        private async Task FillPipeAsync(PipeWriter writer, CancellationToken cancellationToken)
         {
             if (!_connected)
             {
@@ -81,7 +111,9 @@ namespace StreamDeck.Net
                 var memory = writer.GetMemory();
                 try
                 {
+#pragma warning disable 618
                     var socketResult = await Socket.ReceiveAsync(memory, cancellationToken);
+#pragma warning restore 618
                     if (socketResult.Count == 0)
                     {
                         continue;
@@ -100,8 +132,13 @@ namespace StreamDeck.Net
             writer.Complete();
         }
 
-        public async Task ReadPipe(PipeReader reader, CancellationToken cancellationToken)
+        private async Task ReadPipe(PipeReader reader, CancellationToken cancellationToken)
         {
+            if (!_connected)
+            {
+                throw new Exception("Not connected to socket");
+            }
+
             while (!cancellationToken.IsCancellationRequested)
             {
                 var result = await reader.ReadAsync(cancellationToken);
@@ -117,12 +154,11 @@ namespace StreamDeck.Net
                     {
                         jsonReader.SupportMultipleContent = true;
 
-                        var serializer = new JsonSerializer();
                         while (jsonReader.Read())
                         {
                             if (jsonReader.TokenType == JsonToken.StartObject)
                             {
-                                var payload = _serializer.Deserialize<StreamDeckEventPayload>(jsonReader);
+                                var payload = _serialiser.Deserialize<StreamDeckEventPayload>(jsonReader);
                                 await OnEventOccurredAsync(payload);
                             }
                         }
