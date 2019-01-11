@@ -9,8 +9,8 @@ StreamDeck.Net provides an events based .NET Core wrapper around the [Elgato Str
 
 ## Table of Contents
 
-- [Sample Program](#sample%20program)
-- [Local Development](#local%20development)
+- [Sample Program](#sample-program)
+- [Local Development](#local-development)
 - [Install](#install)
 - [Contribute](#contribute)
 - [Thanks](#thanks)
