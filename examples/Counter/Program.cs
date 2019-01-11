@@ -1,10 +1,6 @@
-﻿using System.Net.WebSockets;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using StreamDeck.Net;
 using StreamDeck.Net.Models;
 
@@ -12,71 +8,35 @@ namespace Counter
 {
     public class Program
     {
-        public Program()
-        {
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            };
-
-        }
-
-        public static Task<int> Main(string[] args) => CommandLineApplication.ExecuteAsync<Program>(args);
-
         [Option(Description = "The port the Elgato StreamDeck software is listening on", ShortName = "port")]
         public string Port { get; set; }
 
-        [Option(ShortName = "pluginUUID")]
+        [Option(Description = "The Unique Identifier used to reference the plugin", ShortName = "pluginUUID")]
         public string PluginUuid { get; set; }
 
-        [Option(ShortName = "registerEvent")]
+        [Option(Description = "Event type used to register the plugin", ShortName = "registerEvent")]
         public string RegisterEvent { get; set; }
 
-        [Option(ShortName = "info")]
+        [Option(Description = "String of JSON containing appliaction and device information", ShortName = "info")]
         public string Info { get; set; }
 
-        private ClientWebSocket _socket = new ClientWebSocket();
+        public static Task<int> Main(string[] args) => CommandLineApplication.ExecuteAsync<Program>(args);
+        
 
         private async Task OnExecuteAsync()
         {
             var cancellationTokenSource = new CancellationTokenSource();
             var streamdeck = new StreamDeckClient(Port, PluginUuid, RegisterEvent, Info);
-            _socket = streamdeck.SocketHandler.Socket;
-            streamdeck.KeyDownEventAsync += KeyDown;
+            streamdeck.KeyDownEventAsync += UpdateCounter;
             await streamdeck.RunAsync(cancellationTokenSource.Token);
         }
 
         private static int _counter;
 
-        private async Task KeyDown(object e, StreamDeckEventPayload args)
+        private static async Task UpdateCounter(StreamDeckClient e, StreamDeckEventPayload args)
         {
             _counter++;
-            await SetTitle(args.Context, _counter.ToString());
-
+            await e.SetTitle(args.Context, _counter.ToString());
         }
-
-        /// <summary>
-        /// Set the title on the button passed in the context
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="title"></param>
-        /// <returns></returns>
-        private Task SetTitle(string context, string title)
-        {
-
-            var json = @"{
-					""event"": ""setTitle"",
-					""context"": """ + context + @""",
-					""payload"": {
-						""title"": """ + title + @""",
-						""target"": " + (int)Destination.HardwareAndSoftware + @"
-					}
-				}";
-
-            var bytes = Encoding.UTF8.GetBytes(json);
-            return _socket.SendAsync(bytes, WebSocketMessageType.Binary, true, CancellationToken.None);
-
-        }
-
     }
 }
