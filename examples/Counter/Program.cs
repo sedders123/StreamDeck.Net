@@ -27,7 +27,7 @@ namespace Counter
         public string Port { get; set; }
 
         [Option(ShortName = "pluginUUID")]
-        public string PluginUUID { get; set; }
+        public string PluginUuid { get; set; }
 
         [Option(ShortName = "registerEvent")]
         public string RegisterEvent { get; set; }
@@ -35,19 +35,15 @@ namespace Counter
         [Option(ShortName = "info")]
         public string Info { get; set; }
 
-        private StreamDeckInfo _info;
-        internal StreamDeckInfo StreamDeckInfo => _info ?? (_info = JsonConvert.DeserializeObject<StreamDeckInfo>(Info));
-
         private ClientWebSocket _socket = new ClientWebSocket();
 
         private async Task OnExecuteAsync()
         {
             var cancellationTokenSource = new CancellationTokenSource();
-            var streamdeck = new StreamDeckClient(Port, PluginUUID, RegisterEvent, Info);
+            var streamdeck = new StreamDeckClient(Port, PluginUuid, RegisterEvent, Info);
             _socket = streamdeck.SocketHandler.Socket;
             streamdeck.KeyDownEventAsync += KeyDown;
             await streamdeck.RunAsync(cancellationTokenSource.Token);
-
         }
 
         private static int _counter;
