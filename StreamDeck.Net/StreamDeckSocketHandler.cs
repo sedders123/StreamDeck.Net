@@ -21,9 +21,9 @@ namespace StreamDeck.Net
     public class StreamDeckSocketHandler
     {
         /// <summary>
-        /// WebSocket used for communication with Stream Deck
+        /// WebSocket used for communication with the Stream Deck
         /// </summary>
-        [Obsolete("This will likely be made private. It is exposed to allow for custom usage while the library is being built")]
+        [Obsolete("This will likely be made private in the near future. It is exposed to allow for custom usage while the library is being built.")]
         public ClientWebSocket Socket { get; }
 
         /// <summary>

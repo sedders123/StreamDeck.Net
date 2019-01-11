@@ -15,12 +15,12 @@ namespace StreamDeck.Net {
     public class StreamDeckClient
     {
         /// <summary>
-        /// Manages the WebScoket that the Stream Deck uses.
+        /// Manages the WebSocket that the Stream Deck uses.
         /// </summary>
         public StreamDeckSocketHandler SocketHandler { get; set; }
 
         /// <summary>
-        /// Occurs when any event is recieved from the Stream Deck.
+        /// Occurs when any event is received from the Stream Deck.
         /// </summary>
         public event StreamDeckEventHandler EventOccurredAsync;
 
