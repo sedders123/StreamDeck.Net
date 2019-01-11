@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
 using System.Net.WebSockets;
@@ -8,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using StreamDeck.Net.Models;
 
 namespace StreamDeck.Net
@@ -20,6 +20,7 @@ namespace StreamDeck.Net
         private bool _connected;
         private readonly string _registerEvent;
         private readonly string _pluginUuid;
+        private readonly JsonSerializer _serializer;
         public ClientWebSocket Socket { get; }
 
         public event StreamDeckEventHandler EventOccurredAsync;
@@ -32,6 +33,7 @@ namespace StreamDeck.Net
             _registerEvent = registerEvent;
             _pluginUuid = pluginUuid;
             Socket = new ClientWebSocket();
+            _serializer = new JsonSerializer{ContractResolver = new CamelCasePropertyNamesContractResolver() };
         }
 
         public async Task ConnectAsync(CancellationToken cancellationToken)
@@ -56,9 +58,13 @@ namespace StreamDeck.Net
                 Uuid = _pluginUuid
             };
 
-            var outString = JsonConvert.SerializeObject(registration);
-            var outBytes = Encoding.UTF8.GetBytes(outString);
-
+            byte[] outBytes;
+            using (var textWriter = new StringWriter())
+            {
+                _serializer.Serialize(textWriter, registration);
+                var outString = textWriter.ToString();
+                outBytes = Encoding.UTF8.GetBytes(outString);
+            }
             return outBytes;
 
         }
@@ -116,7 +122,7 @@ namespace StreamDeck.Net
                         {
                             if (jsonReader.TokenType == JsonToken.StartObject)
                             {
-                                var payload = serializer.Deserialize<StreamDeckEventPayload>(jsonReader);
+                                var payload = _serializer.Deserialize<StreamDeckEventPayload>(jsonReader);
                                 await OnEventOccurredAsync(payload);
                             }
                         }
