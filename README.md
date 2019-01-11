@@ -17,7 +17,7 @@ StreamDeck.Net provides an events based .NET Core wrapper around the [Elgato Str
 
 ## Sample program
 
-Below shows how StreamDeck.NET can be used to create a simple counter action. It uses [natemcmaster's excellent CommandLineUtils](https://github.com/natemcmaster/CommandLineUtils) for parsing command line arguments.
+Below shows how StreamDeck.Net can be used to create a simple counter action. It uses [natemcmaster's excellent CommandLineUtils](https://github.com/natemcmaster/CommandLineUtils) for parsing command line arguments.
 
 ```c#
 namespace Counter
