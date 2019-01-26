@@ -63,7 +63,7 @@ namespace Counter
 To develop locally StreamDeck.Net requires:
  - .NET Core 3.0 SDK +
 
-Simply clone this repositry and Nuget Restore the solution.
+Simply clone this repository and Nuget Restore the solution.
 
 ## Install
 
@@ -71,10 +71,10 @@ Simply clone this repositry and Nuget Restore the solution.
 dotnet add package StreamDeck.Net
 ```
 
-For ease of debuugging you can set your plugins local publish profiles to point to the StreamDeck softwares plugin folder. Then you can just re-run the software and attach to process to step through your code.
+For ease of debugging you can set your plugins local publish profiles to point to the StreamDeck softwares plugin folder. Then you can just re-run the software and attach to process to step through your code.
 
 ## Contribute
-If a feature is missing, or you can improve the code please submit a PR or raise an Issue. For substantial chnages or additions it's best to open an Issue first to discuss the need for the feature and potential implementations.
+If a feature is missing, or you can improve the code please submit a PR or raise an Issue. For substantial changes or additions it's best to open an Issue first to discuss the need for the feature and potential implementations.
 
 ## Thanks
 A special thanks to [Jeffrey T. Fritz (@csharpfritz)](https://github.com/csharpfritz) whose [stream](https://www.youtube.com/watch?v=IOLylhVGpM8) inspired this project. The code he implemented in [StreamDeck_First](https://github.com/csharpfritz/StreamDeck_First) was initially used as the base for this project before undergoing heavy refactoring.
